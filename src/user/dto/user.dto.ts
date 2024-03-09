@@ -13,7 +13,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  password: string; 
+  password: string;
 }
 
 export class UpdatePasswordDto {
@@ -24,4 +24,25 @@ export class UpdatePasswordDto {
   @IsString()
   @IsNotEmpty()
   newPassword: string;
+}
+
+import { Exclude } from 'class-transformer';
+
+export interface DataStorage {
+  users: User[];
+}
+
+export class User {
+  id: string;
+  login: string;
+  version: number;
+  createdAt: number;
+  updatedAt: number;
+
+  @Exclude()
+  password: string;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }

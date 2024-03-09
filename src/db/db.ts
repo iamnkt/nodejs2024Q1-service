@@ -1,13 +1,16 @@
-import { UUID } from "crypto";
-import { DataStorage, User } from "src/interfaces/interfaces";
-import { UpdatePasswordDto } from "src/user/dto";
+import { UUID } from 'crypto';
+import { UpdatePasswordDto, User } from 'src/user/dto';
+
+export interface DataStorage {
+  users: User[];
+}
 
 class DataBase {
   dataStorage: DataStorage;
 
   constructor() {
     this.dataStorage = {
-      users: []
+      users: [],
     };
   }
 
@@ -20,7 +23,7 @@ class DataBase {
   }
 
   public getUser(id: UUID) {
-    const user = this.dataStorage.users.find(user => user.id === id);
+    const user = this.dataStorage.users.find((user) => user.id === id);
     return user;
   }
 
@@ -28,6 +31,8 @@ class DataBase {
     this.dataStorage.users.forEach((user) => {
       if (user.id === id) {
         user.password = dto.newPassword;
+        user.updatedAt = Date.now();
+        user.version += 1;
       }
     });
   }
