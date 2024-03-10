@@ -1,24 +1,23 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UUID } from 'crypto';
 import { db } from 'src/db/db';
-import { Track } from './dto';
+import { CreateTrackDto } from './dto';
+import { Track } from './entites';
 
 @Injectable()
 export class TrackService {
-  // create(dto: CreateUserDto): User {
-  //   const user = new User({
-  //     id: crypto.randomUUID(),
-  //     login: dto.login,
-  //     password: dto.password,
-  //     version: 1,
-  //     createdAt: Date.now(),
-  //     updatedAt: Date.now(),
-  //   });
+  create(dto: CreateTrackDto): Track {
+    const track = {
+      id: crypto.randomUUID(),
+      name: dto.name,
+      artistId: dto.artistId,
+      albumId: dto.albumId,
+      duration: dto.duration,
+    }
 
-  //   db.createUser(user);
-
-  //   return user;
-  // }
+    db.createTrack(track);
+    return track;
+  }
 
   findAll(): Track[] {
     const tracks = db.getTracks();
@@ -30,30 +29,24 @@ export class TrackService {
     if (!track) {
       throw new HttpException('Track not found', HttpStatus.NOT_FOUND);
     }
-
     return track;
   }
 
-  // update(params: { id: UUID }, dto: UpdatePasswordDto) {
-  //   const userToUpdate = db.getUser(params.id);
-  //   if (!userToUpdate) {
-  //     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-  //   } else if (userToUpdate.password !== dto.oldPassword) {
-  //     throw new HttpException(
-  //       'User provided incorrect old password',
-  //       HttpStatus.FORBIDDEN,
-  //     );
-  //   } else {
-  //     db.updatePassword(params.id, dto);
-  //   }
-  // }
+  update(params: { id: UUID }, dto: CreateTrackDto) {
+    const trackToUpdate = db.getTrack(params.id);
+    if (!trackToUpdate) {
+      throw new HttpException('Track not found', HttpStatus.NOT_FOUND);
+    } else {
+      db.updateTrack(params.id, dto);
+    }
+  }
 
-  // remove(params: { id: UUID }) {
-  //   const userToDelete = db.getUser(params.id);
-  //   if (!userToDelete) {
-  //     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-  //   } else {
-  //     db.deleteUser(params.id);
-  //   }
-  // }
+  remove(params: { id: UUID }) {
+    const trackToDelete = db.getTrack(params.id);
+    if (!trackToDelete) {
+      throw new HttpException('Track not found', HttpStatus.NOT_FOUND);
+    } else {
+      db.removeTrack(params.id);
+    }
+  }
 }

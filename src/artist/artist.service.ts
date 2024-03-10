@@ -13,13 +13,11 @@ export class ArtistService {
       grammy: dto.grammy,
     }
     db.createArtist(artist);
-
     return artist;
   }
 
   findAll(): Artist[] {
     const artists = db.getArtists();
-
     return artists;
   }
   
@@ -28,7 +26,6 @@ export class ArtistService {
     if (!artist) {
       throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
     }
-
     return artist;
   }
 
@@ -46,7 +43,7 @@ export class ArtistService {
     if (!artistToDelete) {
       throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
     } else {
-      db.deleteArtist(params.id);
+      db.removeArtist(params.id);
     }
   }
 }

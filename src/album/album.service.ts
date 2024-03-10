@@ -13,8 +13,8 @@ export class AlbumService {
       year: dto.year,
       artistId: dto.artistId,
     }
+    
     db.createAlbum(album);
-
     return album;
   }
 
@@ -45,7 +45,7 @@ export class AlbumService {
     if (!albumToDelete) {
       throw new HttpException('Album not found', HttpStatus.NOT_FOUND);
     } else {
-      db.deleteAlbum(params.id);
+      db.removeAlbum(params.id);
     }
   }
 }

@@ -17,7 +17,6 @@ export class UserService {
     });
 
     db.createUser(user);
-
     return user;
   }
 
@@ -31,7 +30,6 @@ export class UserService {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-
     return user;
   }
 
@@ -54,7 +52,7 @@ export class UserService {
     if (!userToDelete) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     } else {
-      db.deleteUser(params.id);
+      db.removeUser(params.id);
     }
   }
 }

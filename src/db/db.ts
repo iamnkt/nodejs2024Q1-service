@@ -3,7 +3,8 @@ import { CreateAlbumDto } from 'src/album/dto/album.dto';
 import { Album } from 'src/album/entities/album.entity';
 import { CreateArtistDto } from 'src/artist/dto';
 import { Artist } from 'src/artist/entities/artist.entity';
-import { Track } from 'src/track/dto/track.dto';
+import { CreateTrackDto } from 'src/track/dto/track.dto';
+import { Track } from 'src/track/entites/track.entity';
 import { UpdatePasswordDto } from 'src/user/dto/user.dto';
 import { User } from 'src/user/entites/user.entity';
 
@@ -49,9 +50,9 @@ class DataBase {
     });
   }
 
-  public deleteUser(id: UUID) {
-    const newStorage = this.dataStorage.users.filter((user) => user.id !== id);
-    this.dataStorage.users = newStorage;
+  public removeUser(id: UUID) {
+    const newUsersStorage = this.dataStorage.users.filter((user) => user.id !== id);
+    this.dataStorage.users = newUsersStorage;
   }
 
   public getTracks() {
@@ -63,37 +64,24 @@ class DataBase {
     return track;
   }
 
-  public getArtists() {
-    return this.dataStorage.artists;
+  public createTrack(track: Track) {
+    this.dataStorage.tracks.push(track);
   }
 
-  public getArtist(id: UUID) {
-    const artist = this.dataStorage.artists.find((artist) => artist.id === id);
-    return artist;
-  }
-
-  public createArtist(artist: Artist) {
-    this.dataStorage.artists.push(artist);
-  }
-
-  public updateArtist(id: UUID, dto: CreateArtistDto) {
-    this.dataStorage.artists.forEach((artist) => {
-      if (artist.id === id) {
-        artist.name = dto.name;
-        artist.grammy = dto.grammy;
+  public updateTrack(id: UUID, dto: CreateTrackDto) {
+    this.dataStorage.tracks.forEach((track) => {
+      if (track.id === id) {
+        track.name = dto.name;
+        track.artistId = dto.artistId;
+        track.albumId = dto.albumId;
+        track.duration = dto.duration;
       }
     });
   }
 
-  public deleteArtist(id: UUID) {
-    const newStorage = this.dataStorage.artists.filter((artist) => artist.id !== id);
-    this.dataStorage.artists = newStorage;
-    this.dataStorage.tracks
-      .filter((track) => track.id === id)
-      .forEach((track) => track.artistId = null);
-    this.dataStorage.albums
-      .filter((album) => album.id === id)
-      .forEach((album) => album.artistId = null);
+  public removeTrack(id: UUID) {
+    const newTracksStorage = this.dataStorage.tracks.filter((track) => track.id !== id);
+    this.dataStorage.tracks = newTracksStorage;
   }
 
   public getAlbums() {
@@ -119,13 +107,47 @@ class DataBase {
     });
   }
 
-  public deleteAlbum(id: UUID) {
-    const newStorage = this.dataStorage.albums.filter((album) => album.id !== id);
-    this.dataStorage.albums = newStorage;
+  public removeAlbum(id: UUID) {
+    const newAlbumsStorage = this.dataStorage.albums.filter((album) => album.id !== id);
+    this.dataStorage.albums = newAlbumsStorage;
     this.dataStorage.tracks
       .filter((track) => track.albumId === id)
       .forEach((track) => track.albumId = null);
   }
+
+  public getArtists() {
+    return this.dataStorage.artists;
+  }
+
+  public getArtist(id: UUID) {
+    const artist = this.dataStorage.artists.find((artist) => artist.id === id);
+    return artist;
+  }
+
+  public createArtist(artist: Artist) {
+    this.dataStorage.artists.push(artist);
+  }
+
+  public updateArtist(id: UUID, dto: CreateArtistDto) {
+    this.dataStorage.artists.forEach((artist) => {
+      if (artist.id === id) {
+        artist.name = dto.name;
+        artist.grammy = dto.grammy;
+      }
+    });
+  }
+
+  public removeArtist(id: UUID) {
+    const newArtistsStorage = this.dataStorage.artists.filter((artist) => artist.id !== id);
+    this.dataStorage.artists = newArtistsStorage;
+    this.dataStorage.tracks
+      .filter((track) => track.artistId === id)
+      .forEach((track) => track.artistId = null);
+    this.dataStorage.albums
+      .filter((album) => album.artistId === id)
+      .forEach((album) => album.artistId = null);
+  }
+
 }
 
 const db = new DataBase();

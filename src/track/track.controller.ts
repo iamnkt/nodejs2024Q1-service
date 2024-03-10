@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
-import { FindOneParams, Track } from './dto';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import { CreateTrackDto, FindOneParams } from './dto';
+import { Track } from './entites';
 import { TrackService } from './track.service';
 
 @Controller('track')
@@ -17,22 +18,22 @@ export class TrackController {
     return track;
   }
   
-  // @Post()
-  // create(@Body() dto: CreateUserDto): User {
-  //   const user = this.userService.create(dto);
-  //   return user;
-  // }
+  @Post()
+  create(@Body() dto: CreateTrackDto): Track {
+    const track = this.trackService.create(dto);
+    return track;
+  }
 
-  // @Put(':id')
-  // update(@Param() params: FindOneParams, @Body() dto: UpdatePasswordDto) {
-  //   this.userService.update(params, dto);
-  //   const user = this.userService.findOne(params);
-  //   return user;
-  // }
+  @Put(':id')
+  update(@Param() params: FindOneParams, @Body() dto: CreateTrackDto) {
+    this.trackService.update(params, dto);
+    const track = this.trackService.findOne(params);
+    return track;
+  }
 
-  // @Delete(':id')
-  // @HttpCode(204)
-  // delete(@Param() params: FindOneParams) {
-  //   this.userService.remove(params);
-  // }
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  delete(@Param() params: FindOneParams) {
+    this.trackService.remove(params);
+  }
 }
