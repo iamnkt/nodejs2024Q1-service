@@ -11,7 +11,7 @@ export class ArtistService {
       id: crypto.randomUUID(),
       name: dto.name,
       grammy: dto.grammy,
-    }
+    };
     db.createArtist(artist);
     return artist;
   }
@@ -20,7 +20,7 @@ export class ArtistService {
     const artists = db.getArtists();
     return artists;
   }
-  
+
   findOne(params: { id: UUID }) {
     const artist = db.getArtist(params.id);
     if (!artist) {

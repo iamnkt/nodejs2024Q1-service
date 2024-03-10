@@ -1,18 +1,20 @@
 import { UUID } from 'crypto';
-import { CreateAlbumDto } from 'src/album/dto/album.dto';
-import { Album } from 'src/album/entities/album.entity';
+import { CreateAlbumDto } from 'src/album/dto';
+import { Album } from 'src/album/entities';
 import { CreateArtistDto } from 'src/artist/dto';
-import { Artist } from 'src/artist/entities/artist.entity';
-import { CreateTrackDto } from 'src/track/dto/track.dto';
-import { Track } from 'src/track/entites/track.entity';
-import { UpdatePasswordDto } from 'src/user/dto/user.dto';
-import { User } from 'src/user/entites/user.entity';
+import { Artist } from 'src/artist/entities';
+import { Entity, Favorites } from 'src/favorites/entity';
+import { CreateTrackDto } from 'src/track/dto';
+import { Track } from 'src/track/entites';
+import { UpdatePasswordDto } from 'src/user/dto';
+import { User } from 'src/user/entites';
 
 export interface DataStorage {
   users: User[];
   tracks: Track[];
   albums: Album[];
   artists: Artist[];
+  favorites: Favorites;
 }
 
 class DataBase {
@@ -24,6 +26,11 @@ class DataBase {
       tracks: [],
       albums: [],
       artists: [],
+      favorites: {
+        artists: [],
+        albums: [],
+        tracks: [],
+      },
     };
   }
 
@@ -51,7 +58,9 @@ class DataBase {
   }
 
   public removeUser(id: UUID) {
-    const newUsersStorage = this.dataStorage.users.filter((user) => user.id !== id);
+    const newUsersStorage = this.dataStorage.users.filter(
+      (user) => user.id !== id,
+    );
     this.dataStorage.users = newUsersStorage;
   }
 
@@ -80,8 +89,17 @@ class DataBase {
   }
 
   public removeTrack(id: UUID) {
-    const newTracksStorage = this.dataStorage.tracks.filter((track) => track.id !== id);
+    const newTracksStorage = this.dataStorage.tracks.filter(
+      (track) => track.id !== id,
+    );
     this.dataStorage.tracks = newTracksStorage;
+    const favTrack = this.dataStorage.favorites.tracks.find(
+      (track) => track.id === id,
+    );
+    if (favTrack) {
+      const favTrackIdx = this.dataStorage.favorites.tracks.indexOf(favTrack);
+      this.dataStorage.favorites.tracks.splice(favTrackIdx, 1);
+    }
   }
 
   public getAlbums() {
@@ -108,11 +126,20 @@ class DataBase {
   }
 
   public removeAlbum(id: UUID) {
-    const newAlbumsStorage = this.dataStorage.albums.filter((album) => album.id !== id);
+    const newAlbumsStorage = this.dataStorage.albums.filter(
+      (album) => album.id !== id,
+    );
     this.dataStorage.albums = newAlbumsStorage;
     this.dataStorage.tracks
       .filter((track) => track.albumId === id)
-      .forEach((track) => track.albumId = null);
+      .forEach((track) => (track.albumId = null));
+    const favAlbum = this.dataStorage.favorites.albums.find(
+      (album) => album.id === id,
+    );
+    if (favAlbum) {
+      const favAlbumIdx = this.dataStorage.favorites.albums.indexOf(favAlbum);
+      this.dataStorage.favorites.albums.splice(favAlbumIdx, 1);
+    }
   }
 
   public getArtists() {
@@ -138,16 +165,54 @@ class DataBase {
   }
 
   public removeArtist(id: UUID) {
-    const newArtistsStorage = this.dataStorage.artists.filter((artist) => artist.id !== id);
+    const newArtistsStorage = this.dataStorage.artists.filter(
+      (artist) => artist.id !== id,
+    );
     this.dataStorage.artists = newArtistsStorage;
     this.dataStorage.tracks
       .filter((track) => track.artistId === id)
-      .forEach((track) => track.artistId = null);
+      .forEach((track) => (track.artistId = null));
     this.dataStorage.albums
       .filter((album) => album.artistId === id)
-      .forEach((album) => album.artistId = null);
+      .forEach((album) => (album.artistId = null));
+    const favArtist = this.dataStorage.favorites.artists.find(
+      (artist) => artist.id === id,
+    );
+    if (favArtist) {
+      const favArtistIdx =
+        this.dataStorage.favorites.artists.indexOf(favArtist);
+      this.dataStorage.favorites.artists.splice(favArtistIdx, 1);
+    }
   }
 
+  public getFavs() {
+    return this.dataStorage.favorites;
+  }
+
+  public findRecord(route: string, id: string) {
+    const record = this.dataStorage[`${route}s`].find(
+      (record) => record.id === id,
+    );
+    return record;
+  }
+
+  public findFavorite(route: string, id: string) {
+    const favorite = this.dataStorage.favorites[`${route}s`].find(
+      (favorite) => favorite.id === id,
+    );
+    return favorite;
+  }
+
+  public addToFavorites(route: string, record: Entity) {
+    this.dataStorage.favorites[`${route}s`].push(record);
+  }
+
+  public removeFromFavorites(route: string, id: string) {
+    const newStorage = this.dataStorage.favorites[`${route}s`].filter(
+      (favorite) => favorite.id !== id,
+    );
+    this.dataStorage.favorites[`${route}s`] = newStorage;
+  }
 }
 
 const db = new DataBase();

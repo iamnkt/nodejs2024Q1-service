@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { UUID } from 'crypto';
 
 export class FindOneParams {
@@ -18,7 +24,7 @@ export class CreateTrackDto {
   @IsOptional()
   @IsString()
   albumId: string | null;
-  
+
   @IsNotEmpty()
   @IsNumber()
   duration: number;

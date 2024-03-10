@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CreateTrackDto, FindOneParams } from './dto';
 import { Track } from './entites';
 import { TrackService } from './track.service';
@@ -17,7 +27,7 @@ export class TrackController {
     const track = this.trackService.findOne(params);
     return track;
   }
-  
+
   @Post()
   create(@Body() dto: CreateTrackDto): Track {
     const track = this.trackService.create(dto);

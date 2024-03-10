@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto, FindOneParams } from './dto';
 import { Album } from './entities';
@@ -17,7 +27,7 @@ export class AlbumController {
     const artist = this.albumService.findOne(params);
     return artist;
   }
-  
+
   @Post()
   create(@Body() dto: CreateAlbumDto): Album {
     const album = this.albumService.create(dto);

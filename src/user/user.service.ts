@@ -24,7 +24,7 @@ export class UserService {
     const users = db.getUsers();
     return users;
   }
-  
+
   findOne(params: { id: UUID }) {
     const user = db.getUser(params.id);
     if (!user) {

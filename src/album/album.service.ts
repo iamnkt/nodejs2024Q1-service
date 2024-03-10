@@ -12,8 +12,8 @@ export class AlbumService {
       name: dto.name,
       year: dto.year,
       artistId: dto.artistId,
-    }
-    
+    };
+
     db.createAlbum(album);
     return album;
   }
@@ -22,7 +22,7 @@ export class AlbumService {
     const artists = db.getAlbums();
     return artists;
   }
-  
+
   findOne(params: { id: UUID }) {
     const album = db.getAlbum(params.id);
     if (!album) {

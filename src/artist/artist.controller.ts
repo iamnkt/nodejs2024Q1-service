@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto, FindOneParams } from './dto';
 import { Artist } from './entities';
@@ -17,7 +27,7 @@ export class ArtistController {
     const artist = this.artistService.findOne(params);
     return artist;
   }
-  
+
   @Post()
   create(@Body() dto: CreateArtistDto): Artist {
     const artist = this.artistService.create(dto);

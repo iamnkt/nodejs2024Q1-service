@@ -29,7 +29,7 @@ export class UserController {
     const user = this.userService.findOne(params);
     return user;
   }
-  
+
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   create(@Body() dto: CreateUserDto): User {

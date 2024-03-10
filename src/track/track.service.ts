@@ -13,7 +13,7 @@ export class TrackService {
       artistId: dto.artistId,
       albumId: dto.albumId,
       duration: dto.duration,
-    }
+    };
 
     db.createTrack(track);
     return track;
@@ -23,7 +23,7 @@ export class TrackService {
     const tracks = db.getTracks();
     return tracks;
   }
-  
+
   findOne(params: { id: UUID }) {
     const track = db.getTrack(params.id);
     if (!track) {
