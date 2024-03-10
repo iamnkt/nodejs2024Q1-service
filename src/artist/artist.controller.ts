@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
 import { ArtistService } from './artist.service';
-import { Artist, CreateArtistDto, FindOneParams } from './dto';
+import { CreateArtistDto, FindOneParams } from './dto';
+import { Artist } from './entities';
 
 @Controller('artist')
 export class ArtistController {
@@ -31,7 +32,7 @@ export class ArtistController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param() params: FindOneParams) {
     this.artistService.remove(params);
   }

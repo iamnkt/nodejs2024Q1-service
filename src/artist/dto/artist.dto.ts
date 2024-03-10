@@ -15,9 +15,3 @@ export class CreateArtistDto {
   @IsNotEmpty()
   grammy: boolean;
 }
-
-export class Artist {
-  id: string;
-  name: string;
-  grammy: boolean;
-}

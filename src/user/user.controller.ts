@@ -5,12 +5,14 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateUserDto, FindOneParams, UpdatePasswordDto, User } from './dto';
+import { CreateUserDto, FindOneParams, UpdatePasswordDto } from './dto';
+import { User } from './entites';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -44,7 +46,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param() params: FindOneParams) {
     this.userService.remove(params);
   }

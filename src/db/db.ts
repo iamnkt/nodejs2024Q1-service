@@ -1,8 +1,11 @@
 import { UUID } from 'crypto';
-import { Album } from 'src/album/dto/album.dto';
-import { Artist, CreateArtistDto } from 'src/artist/dto';
+import { CreateAlbumDto } from 'src/album/dto/album.dto';
+import { Album } from 'src/album/entities/album.entity';
+import { CreateArtistDto } from 'src/artist/dto';
+import { Artist } from 'src/artist/entities/artist.entity';
 import { Track } from 'src/track/dto/track.dto';
-import { UpdatePasswordDto, User } from 'src/user/dto/user.dto';
+import { UpdatePasswordDto } from 'src/user/dto/user.dto';
+import { User } from 'src/user/entites/user.entity';
 
 export interface DataStorage {
   users: User[];
@@ -85,6 +88,43 @@ class DataBase {
   public deleteArtist(id: UUID) {
     const newStorage = this.dataStorage.artists.filter((artist) => artist.id !== id);
     this.dataStorage.artists = newStorage;
+    this.dataStorage.tracks
+      .filter((track) => track.id === id)
+      .forEach((track) => track.artistId = null);
+    this.dataStorage.albums
+      .filter((album) => album.id === id)
+      .forEach((album) => album.artistId = null);
+  }
+
+  public getAlbums() {
+    return this.dataStorage.albums;
+  }
+
+  public getAlbum(id: UUID) {
+    const album = this.dataStorage.albums.find((album) => album.id === id);
+    return album;
+  }
+
+  public createAlbum(album: Album) {
+    this.dataStorage.albums.push(album);
+  }
+
+  public updateAlbum(id: UUID, dto: CreateAlbumDto) {
+    this.dataStorage.albums.forEach((album) => {
+      if (album.id === id) {
+        album.name = dto.name;
+        album.year = dto.year;
+        album.artistId = dto.artistId;
+      }
+    });
+  }
+
+  public deleteAlbum(id: UUID) {
+    const newStorage = this.dataStorage.albums.filter((album) => album.id !== id);
+    this.dataStorage.albums = newStorage;
+    this.dataStorage.tracks
+      .filter((track) => track.albumId === id)
+      .forEach((track) => track.albumId = null);
   }
 }
 

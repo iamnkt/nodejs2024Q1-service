@@ -1,7 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UUID } from 'crypto';
 import { db } from 'src/db/db';
-import { Artist, CreateArtistDto } from './dto';
+import { CreateArtistDto } from './dto';
+import { Artist } from './entities';
 
 @Injectable()
 export class ArtistService {

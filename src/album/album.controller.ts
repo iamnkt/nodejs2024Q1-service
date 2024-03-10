@@ -1,39 +1,39 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
 import { AlbumService } from './album.service';
+import { CreateAlbumDto, FindOneParams } from './dto';
+import { Album } from './entities';
 
 @Controller('album')
 export class AlbumController {
   constructor(private albumService: AlbumService) {}
 
-  // @Get()
-  // getAll(): User[] {
-  //   return this.userService.findAll();
-  // }
+  @Get()
+  getAll(): Album[] {
+    return this.albumService.findAll();
+  }
 
-  // @Get(':id')
-  // getById(@Param() params: FindOneParams) {
-  //   const user = this.userService.findOne(params);
-  //   return user;
-  // }
+  @Get(':id')
+  getById(@Param() params: FindOneParams) {
+    const artist = this.albumService.findOne(params);
+    return artist;
+  }
   
-  // @UseInterceptors(ClassSerializerInterceptor)
-  // @Post()
-  // create(@Body() dto: CreateUserDto): User {
-  //   const user = this.userService.create(dto);
-  //   return user;
-  // }
+  @Post()
+  create(@Body() dto: CreateAlbumDto): Album {
+    const album = this.albumService.create(dto);
+    return album;
+  }
 
-  // @UseInterceptors(ClassSerializerInterceptor)
-  // @Put(':id')
-  // update(@Param() params: FindOneParams, @Body() dto: UpdatePasswordDto) {
-  //   this.userService.update(params, dto);
-  //   const user = this.userService.findOne(params);
-  //   return user;
-  // }
+  @Put(':id')
+  update(@Param() params: FindOneParams, @Body() dto: CreateAlbumDto) {
+    this.albumService.update(params, dto);
+    const album = this.albumService.findOne(params);
+    return album;
+  }
 
-  // @Delete(':id')
-  // @HttpCode(204)
-  // delete(@Param() params: FindOneParams) {
-  //   this.userService.remove(params);
-  // }
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  delete(@Param() params: FindOneParams) {
+    this.albumService.remove(params);
+  }
 }
