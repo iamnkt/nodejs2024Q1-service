@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { UUID } from 'crypto';
+import { Exclude } from 'class-transformer';
 
 export class FindOneParams {
   @IsUUID()
@@ -24,12 +25,6 @@ export class UpdatePasswordDto {
   @IsString()
   @IsNotEmpty()
   newPassword: string;
-}
-
-import { Exclude } from 'class-transformer';
-
-export interface DataStorage {
-  users: User[];
 }
 
 export class User {
