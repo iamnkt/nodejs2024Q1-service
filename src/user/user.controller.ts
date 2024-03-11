@@ -11,10 +11,12 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto, FindOneParams, UpdatePasswordDto } from './dto';
 import { User } from './entites';
 import { UserService } from './user.service';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -32,6 +34,7 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
+  @ApiBody({ type: [CreateUserDto] })
   create(@Body() dto: CreateUserDto): User {
     const user = this.userService.create(dto);
     return user;
@@ -39,6 +42,7 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
+  @ApiBody({ type: [UpdatePasswordDto] })
   update(@Param() params: FindOneParams, @Body() dto: UpdatePasswordDto) {
     this.userService.update(params, dto);
     const user = this.userService.findOne(params);

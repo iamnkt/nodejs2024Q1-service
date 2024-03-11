@@ -93,11 +93,11 @@ class DataBase {
       (track) => track.id !== id,
     );
     this.dataStorage.tracks = newTracksStorage;
-    const favTrack = this.dataStorage.favorites.tracks.find(
-      (track) => track.id === id,
+    const favTrackId = this.dataStorage.favorites.tracks.find(
+      (track) => track === id,
     );
-    if (favTrack) {
-      const favTrackIdx = this.dataStorage.favorites.tracks.indexOf(favTrack);
+    if (favTrackId) {
+      const favTrackIdx = this.dataStorage.favorites.tracks.indexOf(favTrackId);
       this.dataStorage.favorites.tracks.splice(favTrackIdx, 1);
     }
   }
@@ -133,11 +133,11 @@ class DataBase {
     this.dataStorage.tracks
       .filter((track) => track.albumId === id)
       .forEach((track) => (track.albumId = null));
-    const favAlbum = this.dataStorage.favorites.albums.find(
-      (album) => album.id === id,
+    const favAlbumId = this.dataStorage.favorites.albums.find(
+      (album) => album === id,
     );
-    if (favAlbum) {
-      const favAlbumIdx = this.dataStorage.favorites.albums.indexOf(favAlbum);
+    if (favAlbumId) {
+      const favAlbumIdx = this.dataStorage.favorites.albums.indexOf(favAlbumId);
       this.dataStorage.favorites.albums.splice(favAlbumIdx, 1);
     }
   }
@@ -175,18 +175,32 @@ class DataBase {
     this.dataStorage.albums
       .filter((album) => album.artistId === id)
       .forEach((album) => (album.artistId = null));
-    const favArtist = this.dataStorage.favorites.artists.find(
-      (artist) => artist.id === id,
+    const favArtistId = this.dataStorage.favorites.artists.find(
+      (artist) => artist === id,
     );
-    if (favArtist) {
+    if (favArtistId) {
       const favArtistIdx =
-        this.dataStorage.favorites.artists.indexOf(favArtist);
+        this.dataStorage.favorites.artists.indexOf(favArtistId);
       this.dataStorage.favorites.artists.splice(favArtistIdx, 1);
     }
   }
 
   public getFavs() {
-    return this.dataStorage.favorites;
+    const artists = this.dataStorage.favorites.artists.map((id) => {
+      return this.findRecord('artist', id);
+    });
+    const albums = this.dataStorage.favorites.albums.map((id) => {
+      return this.findRecord('album', id);
+    });
+    const tracks = this.dataStorage.favorites.tracks.map((id) => {
+      return this.findRecord('track', id);
+    });
+
+    return {
+      artists,
+      albums,
+      tracks,
+    }
   }
 
   public findRecord(route: string, id: string) {
@@ -198,18 +212,18 @@ class DataBase {
 
   public findFavorite(route: string, id: string) {
     const favorite = this.dataStorage.favorites[`${route}s`].find(
-      (favorite) => favorite.id === id,
+      (favoriteId) => favoriteId === id,
     );
     return favorite;
   }
 
-  public addToFavorites(route: string, record: Entity) {
-    this.dataStorage.favorites[`${route}s`].push(record);
+  public addToFavorites(route: string, id: string) {
+    this.dataStorage.favorites[`${route}s`].push(id);
   }
 
   public removeFromFavorites(route: string, id: string) {
     const newStorage = this.dataStorage.favorites[`${route}s`].filter(
-      (favorite) => favorite.id !== id,
+      (favoriteId) => favoriteId !== id,
     );
     this.dataStorage.favorites[`${route}s`] = newStorage;
   }

@@ -8,21 +8,23 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
-import { Favorites } from './entity';
+import { ApiTags } from '@nestjs/swagger';
+import { Favorites, FavoritesResponse } from './entity';
 import { FavoritesService } from './favorites.service';
 
+@ApiTags('favs')
 @Controller('favs')
 export class FavoritesController {
   constructor(private favoritesService: FavoritesService) {}
 
   @Get()
-  getAll(): Favorites {
+  getAll(): FavoritesResponse {
     return this.favoritesService.findAll();
   }
 
   @Post(':route/:id')
   add(@Param('route') route: string, @Param('id', ParseUUIDPipe) id: string) {
-    this.favoritesService.add(route, id);
+    return this.favoritesService.add(route, id);
   }
 
   @Delete(':route/:id')

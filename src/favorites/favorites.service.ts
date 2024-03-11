@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { db } from 'src/db/db';
-import { Favorites } from './entity';
+import { Favorites, FavoritesResponse } from './entity';
 
 @Injectable()
 export class FavoritesService {
-  findAll(): Favorites {
+  findAll(): FavoritesResponse {
     const favorites = db.getFavs();
     return favorites;
   }
@@ -19,11 +19,15 @@ export class FavoritesService {
       );
     }
 
+    const recordId = record.id;
+
     const favorite = db.findFavorite(route, id);
 
     if (!favorite) {
-      db.addToFavorites(route, record);
+      db.addToFavorites(route, recordId);
     }
+
+    return record;
   }
 
   remove(route: string, id: string) {
