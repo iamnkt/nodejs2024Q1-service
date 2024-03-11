@@ -36,7 +36,7 @@ export class FavoritesService {
     const favorite = db.findFavorite(route, id);
 
     if (record && !favorite) {
-      throw new HttpException(`${route} if not favorite`, HttpStatus.NOT_FOUND);
+      throw new HttpException(`${route} is not favorite`, HttpStatus.NOT_FOUND);
     }
 
     if (favorite) {
