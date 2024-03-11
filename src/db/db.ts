@@ -3,7 +3,7 @@ import { CreateAlbumDto } from 'src/album/dto';
 import { Album } from 'src/album/entities';
 import { CreateArtistDto } from 'src/artist/dto';
 import { Artist } from 'src/artist/entities';
-import { Entity, Favorites } from 'src/favorites/entity';
+import { Favorites } from 'src/favorites/entity';
 import { CreateTrackDto } from 'src/track/dto';
 import { Track } from 'src/track/entites';
 import { UpdatePasswordDto } from 'src/user/dto';
@@ -200,7 +200,7 @@ class DataBase {
       artists,
       albums,
       tracks,
-    }
+    };
   }
 
   public findRecord(route: string, id: string) {

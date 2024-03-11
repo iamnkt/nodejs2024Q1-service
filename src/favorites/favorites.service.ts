@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { db } from 'src/db/db';
-import { Favorites, FavoritesResponse } from './entity';
+import { FavoritesResponse } from './entity';
 
 @Injectable()
 export class FavoritesService {

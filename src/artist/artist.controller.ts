@@ -9,12 +9,10 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto, FindOneParams } from './dto';
 import { Artist } from './entities';
 
-@ApiTags('artist')
 @Controller('artist')
 export class ArtistController {
   constructor(private artistService: ArtistService) {}
@@ -31,14 +29,12 @@ export class ArtistController {
   }
 
   @Post()
-  @ApiBody({ type: [CreateArtistDto] })
   create(@Body() dto: CreateArtistDto): Artist {
     const artist = this.artistService.create(dto);
     return artist;
   }
 
   @Put(':id')
-  @ApiBody({ type: [CreateArtistDto] })
   update(@Param() params: FindOneParams, @Body() dto: CreateArtistDto) {
     this.artistService.update(params, dto);
     const artist = this.artistService.findOne(params);
