@@ -1,8 +1,7 @@
 import { UUID } from 'crypto';
 import { CreateAlbumDto } from 'src/album/dto';
 import { Album } from 'src/album/entities';
-import { CreateArtistDto } from 'src/artist/dto';
-import { Artist } from 'src/artist/entities';
+import { ArtistDto } from 'src/artist/dto';
 import { Favorites } from 'src/favorites/entity';
 import { CreateTrackDto } from 'src/track/dto';
 import { Track } from 'src/track/entites';
@@ -13,7 +12,7 @@ export interface DataStorage {
   users: User[];
   tracks: Track[];
   albums: Album[];
-  artists: Artist[];
+  // artists: Artist[];
   favorites: Favorites;
 }
 
@@ -25,7 +24,7 @@ class DataBase {
       users: [],
       tracks: [],
       albums: [],
-      artists: [],
+      // artists: [],
       favorites: {
         artists: [],
         albums: [],
@@ -142,48 +141,48 @@ class DataBase {
     }
   }
 
-  public getArtists() {
-    return this.dataStorage.artists;
-  }
+  // public getArtists() {
+  //   return this.dataStorage.artists;
+  // }
 
-  public getArtist(id: UUID) {
-    const artist = this.dataStorage.artists.find((artist) => artist.id === id);
-    return artist;
-  }
+  // public getArtist(id: UUID) {
+  //   const artist = this.dataStorage.artists.find((artist) => artist.id === id);
+  //   return artist;
+  // }
 
-  public createArtist(artist: Artist) {
-    this.dataStorage.artists.push(artist);
-  }
+  // public createArtist(artist: Artist) {
+  //   this.dataStorage.artists.push(artist);
+  // }
 
-  public updateArtist(id: UUID, dto: CreateArtistDto) {
-    this.dataStorage.artists.forEach((artist) => {
-      if (artist.id === id) {
-        artist.name = dto.name;
-        artist.grammy = dto.grammy;
-      }
-    });
-  }
+  // public updateArtist(id: UUID, dto: CreateArtistDto) {
+  //   this.dataStorage.artists.forEach((artist) => {
+  //     if (artist.id === id) {
+  //       artist.name = dto.name;
+  //       artist.grammy = dto.grammy;
+  //     }
+  //   });
+  // }
 
-  public removeArtist(id: UUID) {
-    const newArtistsStorage = this.dataStorage.artists.filter(
-      (artist) => artist.id !== id,
-    );
-    this.dataStorage.artists = newArtistsStorage;
-    this.dataStorage.tracks
-      .filter((track) => track.artistId === id)
-      .forEach((track) => (track.artistId = null));
-    this.dataStorage.albums
-      .filter((album) => album.artistId === id)
-      .forEach((album) => (album.artistId = null));
-    const favArtistId = this.dataStorage.favorites.artists.find(
-      (artist) => artist === id,
-    );
-    if (favArtistId) {
-      const favArtistIdx =
-        this.dataStorage.favorites.artists.indexOf(favArtistId);
-      this.dataStorage.favorites.artists.splice(favArtistIdx, 1);
-    }
-  }
+  // public removeArtist(id: UUID) {
+  //   const newArtistsStorage = this.dataStorage.artists.filter(
+  //     (artist) => artist.id !== id,
+  //   );
+  //   this.dataStorage.artists = newArtistsStorage;
+  //   this.dataStorage.tracks
+  //     .filter((track) => track.artistId === id)
+  //     .forEach((track) => (track.artistId = null));
+  //   this.dataStorage.albums
+  //     .filter((album) => album.artistId === id)
+  //     .forEach((album) => (album.artistId = null));
+  //   const favArtistId = this.dataStorage.favorites.artists.find(
+  //     (artist) => artist === id,
+  //   );
+  //   if (favArtistId) {
+  //     const favArtistIdx =
+  //       this.dataStorage.favorites.artists.indexOf(favArtistId);
+  //     this.dataStorage.favorites.artists.splice(favArtistIdx, 1);
+  //   }
+  // }
 
   public getFavs() {
     const artists = this.dataStorage.favorites.artists.map((id) => {

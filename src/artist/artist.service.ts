@@ -1,49 +1,67 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UUID } from 'crypto';
-import { db } from 'src/db/db';
-import { CreateArtistDto } from './dto';
-import { Artist } from './entities';
+import { DatabaseService } from 'src/database/database.service';
+import { ArtistDto } from './dto';
 
 @Injectable()
 export class ArtistService {
-  create(dto: CreateArtistDto): Artist {
+  constructor(private readonly databaseService: DatabaseService) {}
+
+  async create(dto: ArtistDto) {
     const artist = {
       id: crypto.randomUUID(),
       name: dto.name,
       grammy: dto.grammy,
     };
-    db.createArtist(artist);
-    return artist;
+    return this.databaseService.artist.create({ data: artist });
   }
 
-  findAll(): Artist[] {
-    const artists = db.getArtists();
-    return artists;
+  async findAll() {
+    return this.databaseService.artist.findMany({});
   }
 
-  findOne(params: { id: UUID }) {
-    const artist = db.getArtist(params.id);
+  async findOne(params: { id: UUID }) {
+    const artist = await this.databaseService.artist.findUnique({
+      where: {
+        id: params.id,
+      }
+    });
     if (!artist) {
-      throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
-    }
+      throw new HttpException('Artist was not found', HttpStatus.NOT_FOUND);
+    };
     return artist;
   }
 
-  update(params: { id: UUID }, dto: CreateArtistDto) {
-    const artistToUpdate = db.getArtist(params.id);
+  async update(params: { id: UUID }, dto: ArtistDto) {
+    const artistToUpdate = await this.databaseService.artist.findUnique({
+      where: {
+        id: params.id,
+      }
+    });
     if (!artistToUpdate) {
-      throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Artist was not found', HttpStatus.NOT_FOUND);
     } else {
-      db.updateArtist(params.id, dto);
-    }
+      return await this.databaseService.artist.update({
+        where: {
+          id: params.id,
+        },
+        data: dto,
+      });
+    };
   }
 
-  remove(params: { id: UUID }) {
-    const artistToDelete = db.getArtist(params.id);
+  async remove(params: { id: UUID }) {
+    const artistToDelete = await this.databaseService.artist.findUnique({
+      where: {
+        id: params.id,
+      }
+    });
     if (!artistToDelete) {
-      throw new HttpException('Artist not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Artist was not found', HttpStatus.NOT_FOUND);
     } else {
-      db.removeArtist(params.id);
-    }
+      return await this.databaseService.artist.delete({
+        where: { id: params.id },
+      })
+    };
   }
 }

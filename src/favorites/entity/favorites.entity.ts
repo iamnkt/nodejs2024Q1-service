@@ -1,5 +1,4 @@
 import { Album } from 'src/album/entities';
-import { Artist } from 'src/artist/entities';
 import { Track } from 'src/track/entites';
 
 export class Favorites {
@@ -9,7 +8,7 @@ export class Favorites {
 }
 
 export class FavoritesResponse {
-  artists: Artist[];
+  // artists: Artist[];
   albums: Album[];
   tracks: Track[];
 }

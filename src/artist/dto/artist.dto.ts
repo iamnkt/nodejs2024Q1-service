@@ -6,7 +6,7 @@ export class FindOneParams {
   id: UUID;
 }
 
-export class CreateArtistDto {
+export class ArtistDto {
   @IsString()
   @IsNotEmpty()
   name: string;
