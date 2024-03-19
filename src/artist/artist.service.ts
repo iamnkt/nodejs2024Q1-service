@@ -61,7 +61,7 @@ export class ArtistService {
     } else {
       return await this.databaseService.artist.delete({
         where: { id: params.id },
-      })
+      });
     };
   }
 }

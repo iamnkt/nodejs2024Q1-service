@@ -1,51 +1,68 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UUID } from 'crypto';
-import { db } from 'src/db/db';
-import { CreateAlbumDto } from './dto';
-import { Album } from './entities';
+import { DatabaseService } from 'src/database/database.service';
+import { AlbumDto } from './dto';
 
 @Injectable()
 export class AlbumService {
-  create(dto: CreateAlbumDto): Album {
+  constructor(private readonly databaseService: DatabaseService) {}
+  
+  async create(dto: AlbumDto) {
     const album = {
       id: crypto.randomUUID(),
       name: dto.name,
       year: dto.year,
       artistId: dto.artistId,
     };
-
-    db.createAlbum(album);
-    return album;
+    return this.databaseService.album.create({ data: album });
   }
 
-  findAll(): Album[] {
-    const artists = db.getAlbums();
-    return artists;
+  async findAll() {
+    return this.databaseService.album.findMany({});
   }
 
-  findOne(params: { id: UUID }) {
-    const album = db.getAlbum(params.id);
+  async findOne(params: { id: UUID }) {
+    const album = await this.databaseService.album.findUnique({
+      where: {
+        id: params.id,
+      }
+    });
     if (!album) {
-      throw new HttpException('Album not found', HttpStatus.NOT_FOUND);
-    }
+      throw new HttpException('Album was not found', HttpStatus.NOT_FOUND);
+    };
     return album;
   }
 
-  update(params: { id: UUID }, dto: CreateAlbumDto) {
-    const albumToUpdate = db.getAlbum(params.id);
+  async update(params: { id: UUID }, dto: AlbumDto) {
+    const albumToUpdate = await this.databaseService.album.findUnique({
+      where: {
+        id: params.id,
+      }
+    });
     if (!albumToUpdate) {
-      throw new HttpException('Album not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Album was not found', HttpStatus.NOT_FOUND);
     } else {
-      db.updateAlbum(params.id, dto);
-    }
+      return await this.databaseService.album.update({
+        where: {
+          id: params.id,
+        },
+        data: dto,
+      });
+    };
   }
 
-  remove(params: { id: UUID }) {
-    const albumToDelete = db.getAlbum(params.id);
+  async remove(params: { id: UUID }) {
+    const albumToDelete = await this.databaseService.album.findUnique({
+      where: {
+        id: params.id,
+      }
+    });
     if (!albumToDelete) {
-      throw new HttpException('Album not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Album was not found', HttpStatus.NOT_FOUND);
     } else {
-      db.removeAlbum(params.id);
-    }
+      return await this.databaseService.album.delete({
+        where: { id: params.id },
+      });
+    };
   }
 }

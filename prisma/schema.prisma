@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id        String @id
+  id        String   @id
   login     String
   password  String
   version   Int
@@ -23,32 +23,33 @@ model User {
 }
 
 model Artist {
-  id        String @id
-  name      String
-  grammy    Boolean
+  id     String  @id
+  name   String
+  grammy Boolean
+  Album  Album[]
 }
 
 model Album {
-  id        String @id
-  name      String
-  year      Int
-  //artist    Artist? @relation(fields: [artistId], references: [id])
-  artistId  String?
+  id       String  @id
+  name     String
+  year     Int
+  artist   Artist? @relation(fields: [artistId], references: [id])
+  artistId String?
 }
 
 model Track {
-  id        String @id
-  name      String
+  id       String  @id
+  name     String
   //artist    Artist? @relation(fields: [artistId], references: [id])
-  artistId  String?
+  artistId String?
   //album     Album? @relation(fields: [albumId], references: [id])
-  albumId   String?
-  duration  Float
+  albumId  String?
+  duration Float
 }
 
 model Favs {
-  id        String @id
-  artists   String[]
-  albums    String[]
-  tracks    String[]
+  id      String   @id
+  artists String[]
+  albums  String[]
+  tracks  String[]
 }

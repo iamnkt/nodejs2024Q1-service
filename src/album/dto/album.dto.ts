@@ -12,7 +12,7 @@ export class FindOneParams {
   id: UUID;
 }
 
-export class CreateAlbumDto {
+export class AlbumDto {
   @IsNotEmpty()
   @IsString()
   name: string;
