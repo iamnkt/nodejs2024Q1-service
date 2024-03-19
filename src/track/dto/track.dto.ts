@@ -12,7 +12,7 @@ export class FindOneParams {
   id: UUID;
 }
 
-export class CreateTrackDto {
+export class TrackDto {
   @IsNotEmpty()
   @IsString()
   name: string;

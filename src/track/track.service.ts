@@ -1,50 +1,69 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UUID } from 'crypto';
-import { CreateTrackDto } from './dto';
+import { DatabaseService } from 'src/database/database.service';
+import { TrackDto } from './dto';
 
 @Injectable()
 export class TrackService {
-  // create(dto: CreateTrackDto): Track {
-  //   const track = {
-  //     id: crypto.randomUUID(),
-  //     name: dto.name,
-  //     artistId: dto.artistId,
-  //     albumId: dto.albumId,
-  //     duration: dto.duration,
-  //   };
+  constructor(private readonly databaseService: DatabaseService) {}
+  
+  async create(dto: TrackDto) {
+    const track = {
+      id: crypto.randomUUID(),
+      name: dto.name,
+      artistId: dto.artistId,
+      albumId: dto.albumId,
+      duration: dto.duration,
+    };
+    return this.databaseService.track.create({ data: track });
+  }
 
-  //   db.createTrack(track);
-  //   return track;
-  // }
+  async findAll() {
+    return this.databaseService.track.findMany({});
+  }
 
-  // findAll(): Track[] {
-  //   const tracks = db.getTracks();
-  //   return tracks;
-  // }
+  async findOne(params: { id: UUID }) {
+    const track = await this.databaseService.track.findUnique({
+      where: {
+        id: params.id,
+      }
+    });
+    if (!track) {
+      throw new HttpException('Track was not found', HttpStatus.NOT_FOUND);
+    };
+    return track;
+  }
 
-  // findOne(params: { id: UUID }) {
-  //   const track = db.getTrack(params.id);
-  //   if (!track) {
-  //     throw new HttpException('Track not found', HttpStatus.NOT_FOUND);
-  //   }
-  //   return track;
-  // }
+  async update(params: { id: UUID }, dto: TrackDto) {
+    const trackToUpdate = await this.databaseService.track.findUnique({
+      where: {
+        id: params.id,
+      }
+    });
+    if (!trackToUpdate) {
+      throw new HttpException('Track was not found', HttpStatus.NOT_FOUND);
+    } else {
+      return await this.databaseService.track.update({
+        where: {
+          id: params.id,
+        },
+        data: dto,
+      });
+    };
+  }
 
-  // update(params: { id: UUID }, dto: CreateTrackDto) {
-  //   const trackToUpdate = db.getTrack(params.id);
-  //   if (!trackToUpdate) {
-  //     throw new HttpException('Track not found', HttpStatus.NOT_FOUND);
-  //   } else {
-  //     db.updateTrack(params.id, dto);
-  //   }
-  // }
-
-  // remove(params: { id: UUID }) {
-  //   const trackToDelete = db.getTrack(params.id);
-  //   if (!trackToDelete) {
-  //     throw new HttpException('Track not found', HttpStatus.NOT_FOUND);
-  //   } else {
-  //     db.removeTrack(params.id);
-  //   }
-  // }
+  async remove(params: { id: UUID }) {
+    const trackToDelete = await this.databaseService.track.findUnique({
+      where: {
+        id: params.id,
+      }
+    });
+    if (!trackToDelete) {
+      throw new HttpException('Track was not found', HttpStatus.NOT_FOUND);
+    } else {
+      return await this.databaseService.track.delete({
+        where: { id: params.id },
+      });
+    };
+  }
 }

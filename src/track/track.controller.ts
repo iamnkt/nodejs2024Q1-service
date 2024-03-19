@@ -9,40 +9,36 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateTrackDto, FindOneParams } from './dto';
+import { TrackDto, FindOneParams } from './dto';
 import { TrackService } from './track.service';
 
 @Controller('track')
 export class TrackController {
   constructor(private trackService: TrackService) {}
 
-  // @Get()
-  // getAll(): Track[] {
-  //   return this.trackService.findAll();
-  // }
+  @Get()
+  getAll() {
+    return this.trackService.findAll();
+  }
 
-  // @Get(':id')
-  // getById(@Param() params: FindOneParams) {
-  //   const track = this.trackService.findOne(params);
-  //   return track;
-  // }
+  @Get(':id')
+  getById(@Param() params: FindOneParams) {
+    return this.trackService.findOne(params);
+  }
 
-  // @Post()
-  // create(@Body() dto: CreateTrackDto): Track {
-  //   const track = this.trackService.create(dto);
-  //   return track;
-  // }
+  @Post()
+  create(@Body() dto: TrackDto) {
+    return this.trackService.create(dto);
+  }
 
-  // @Put(':id')
-  // update(@Param() params: FindOneParams, @Body() dto: CreateTrackDto) {
-  //   this.trackService.update(params, dto);
-  //   const track = this.trackService.findOne(params);
-  //   return track;
-  // }
+  @Put(':id')
+  update(@Param() params: FindOneParams, @Body() dto: TrackDto) {
+    return this.trackService.update(params, dto);
+  }
 
-  // @Delete(':id')
-  // @HttpCode(HttpStatus.NO_CONTENT)
-  // delete(@Param() params: FindOneParams) {
-  //   this.trackService.remove(params);
-  // }
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  delete(@Param() params: FindOneParams) {
+    return this.trackService.remove(params);
+  }
 }
