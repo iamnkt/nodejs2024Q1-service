@@ -45,7 +45,7 @@ describe('artist (e2e)', () => {
       const response = await unauthorizedRequest
         .get(artistsRoutes.getAll)
         .set(commonHeaders);
-      
+
       expect(response.status).toBe(StatusCodes.OK);
       expect(response.body).toBeInstanceOf(Array);
     });

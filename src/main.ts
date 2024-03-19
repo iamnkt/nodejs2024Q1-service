@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import * as YAML from 'yamljs';
 import 'dotenv/config';
+import './helpers/bigint';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

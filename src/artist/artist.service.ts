@@ -8,12 +8,12 @@ export class ArtistService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(dto: ArtistDto) {
-    const artist = {
+    const artistData = {
       id: crypto.randomUUID(),
       name: dto.name,
       grammy: dto.grammy,
     };
-    return this.databaseService.artist.create({ data: artist });
+    return this.databaseService.artist.create({ data: artistData });
   }
 
   async findAll() {
@@ -24,11 +24,11 @@ export class ArtistService {
     const artist = await this.databaseService.artist.findUnique({
       where: {
         id: params.id,
-      }
+      },
     });
     if (!artist) {
       throw new HttpException('Artist was not found', HttpStatus.NOT_FOUND);
-    };
+    }
     return artist;
   }
 
@@ -36,7 +36,7 @@ export class ArtistService {
     const artistToUpdate = await this.databaseService.artist.findUnique({
       where: {
         id: params.id,
-      }
+      },
     });
     if (!artistToUpdate) {
       throw new HttpException('Artist was not found', HttpStatus.NOT_FOUND);
@@ -47,14 +47,14 @@ export class ArtistService {
         },
         data: dto,
       });
-    };
+    }
   }
 
   async remove(params: { id: UUID }) {
     const artistToDelete = await this.databaseService.artist.findUnique({
       where: {
         id: params.id,
-      }
+      },
     });
     if (!artistToDelete) {
       throw new HttpException('Artist was not found', HttpStatus.NOT_FOUND);
@@ -62,6 +62,6 @@ export class ArtistService {
       return await this.databaseService.artist.delete({
         where: { id: params.id },
       });
-    };
+    }
   }
 }

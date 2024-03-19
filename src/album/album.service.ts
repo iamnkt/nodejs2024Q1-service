@@ -6,15 +6,15 @@ import { AlbumDto } from './dto';
 @Injectable()
 export class AlbumService {
   constructor(private readonly databaseService: DatabaseService) {}
-  
+
   async create(dto: AlbumDto) {
-    const album = {
+    const albumData = {
       id: crypto.randomUUID(),
       name: dto.name,
       year: dto.year,
       artistId: dto.artistId,
     };
-    return this.databaseService.album.create({ data: album });
+    return this.databaseService.album.create({ data: albumData });
   }
 
   async findAll() {
@@ -25,11 +25,11 @@ export class AlbumService {
     const album = await this.databaseService.album.findUnique({
       where: {
         id: params.id,
-      }
+      },
     });
     if (!album) {
       throw new HttpException('Album was not found', HttpStatus.NOT_FOUND);
-    };
+    }
     return album;
   }
 
@@ -37,7 +37,7 @@ export class AlbumService {
     const albumToUpdate = await this.databaseService.album.findUnique({
       where: {
         id: params.id,
-      }
+      },
     });
     if (!albumToUpdate) {
       throw new HttpException('Album was not found', HttpStatus.NOT_FOUND);
@@ -48,14 +48,14 @@ export class AlbumService {
         },
         data: dto,
       });
-    };
+    }
   }
 
   async remove(params: { id: UUID }) {
     const albumToDelete = await this.databaseService.album.findUnique({
       where: {
         id: params.id,
-      }
+      },
     });
     if (!albumToDelete) {
       throw new HttpException('Album was not found', HttpStatus.NOT_FOUND);
@@ -63,6 +63,6 @@ export class AlbumService {
       return await this.databaseService.album.delete({
         where: { id: params.id },
       });
-    };
+    }
   }
 }

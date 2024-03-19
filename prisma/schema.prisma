@@ -18,8 +18,8 @@ model User {
   login     String
   password  String
   version   Int
-  createdAt DateTime
-  updatedAt DateTime
+  createdAt BigInt
+  updatedAt BigInt
 }
 
 model Artist {
