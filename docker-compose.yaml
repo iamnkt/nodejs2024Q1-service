@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+
+  postgres:
+    image: postgres:alpine
+    container_name: db_container
+    restart: unless-stopped
+    build: 
+      context: .
+      dockerfile: Dockerfile_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=homelibrary
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    networks:
+      - postgres
+
+  app:
+    image: app_image
+    stdin_open: true
+    tty: true
+    container_name: app_container
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+     - '4000:4000'
+    volumes:
+     - ./src:/app/src/
+    depends_on:
+     - postgres
+    networks:
+      - postgres
+
+volumes:
+  data:
+
+networks:
+  postgres:
+    driver: bridge

@@ -1,8 +1,0 @@
--- AddForeignKey
-ALTER TABLE "Favs" ADD CONSTRAINT "Favs_artists_fkey" FOREIGN KEY ("artists") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Favs" ADD CONSTRAINT "Favs_albums_fkey" FOREIGN KEY ("albums") REFERENCES "Album"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Favs" ADD CONSTRAINT "Favs_tracks_fkey" FOREIGN KEY ("tracks") REFERENCES "Track"("id") ON DELETE CASCADE ON UPDATE CASCADE;

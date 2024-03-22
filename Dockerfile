@@ -1,17 +1,17 @@
-FROM node:20
+FROM node:21-alpine as build
 
 WORKDIR /app
 
-COPY package.json /app
+COPY package*.json .
 
 RUN npm install
 
 COPY . .
 
-RUN npm run build
+FROM node:21-alpine as main
 
-ENV PORT 4000
+WORKDIR /app
 
-EXPOSE $PORT
+COPY --from=build /app /app
 
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "start:container" ]

@@ -15,8 +15,8 @@ export class FavoritesService {
         albums: [],
         tracks: [],
       };
-
-      this.databaseService.favs.create({ data: favsData });
+  
+      await this.databaseService.favs.create({ data: favsData });
       favs = (await this.databaseService.favs.findMany({}))[0];
     }
 
@@ -51,9 +51,9 @@ export class FavoritesService {
     );
 
     const result = {
-      artists: artists.filter((artist) => artist !== null),
-      albums: albums.filter((album) => album !== null),
-      tracks: tracks.filter((track) => track !== null),
+      artists: artists.filter((artist) => artist !== null) ?? [],
+      albums: albums.filter((album) => album !== null) ?? [],
+      tracks: tracks.filter((track) => track !== null) ?? [],
     };
 
     return result;
