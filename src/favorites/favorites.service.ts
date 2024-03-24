@@ -6,13 +6,15 @@ export class FavoritesService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async findAll() {
-    const favs = (await this.databaseService.favs.findMany({
-      include: {
-        artists: true,
-        albums: true,
-        tracks: true,
-      }
-    }))[0];
+    const favs = (
+      await this.databaseService.favs.findMany({
+        include: {
+          artists: true,
+          albums: true,
+          tracks: true,
+        },
+      })
+    )[0];
 
     if (!favs) {
       const favsId = {
@@ -24,9 +26,9 @@ export class FavoritesService {
         artists: [],
         albums: [],
         tracks: [],
-      }
+      };
     }
-    
+
     return favs;
   }
 
@@ -44,13 +46,15 @@ export class FavoritesService {
       );
     }
 
-    const favs = (await this.databaseService.favs.findMany({
-      include: {
-        artists: true,
-        albums: true,
-        tracks: true,
-      }
-    }))[0];
+    const favs = (
+      await this.databaseService.favs.findMany({
+        include: {
+          artists: true,
+          albums: true,
+          tracks: true,
+        },
+      })
+    )[0];
 
     const isFavorite = favs[`${route}s`].find((entity) => entity.id === id);
 
@@ -61,8 +65,8 @@ export class FavoritesService {
         },
         data: {
           [`${route}s`]: {
-            connect: { id }
-          }
+            connect: { id },
+          },
         },
       });
     }
@@ -77,13 +81,15 @@ export class FavoritesService {
       },
     });
 
-    const favs = (await this.databaseService.favs.findMany({
-      include: {
-        artists: true,
-        albums: true,
-        tracks: true,
-      }
-    }))[0];
+    const favs = (
+      await this.databaseService.favs.findMany({
+        include: {
+          artists: true,
+          albums: true,
+          tracks: true,
+        },
+      })
+    )[0];
 
     const isFavorite = favs[`${route}s`].find((entity) => entity.id === id);
 
@@ -98,8 +104,8 @@ export class FavoritesService {
         },
         data: {
           [`${route}s`]: {
-            disconnect: { id }
-          }
+            disconnect: { id },
+          },
         },
       });
     }
