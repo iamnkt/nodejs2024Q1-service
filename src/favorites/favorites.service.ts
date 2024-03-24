@@ -6,57 +6,28 @@ export class FavoritesService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async findAll() {
-    let favs = (await this.databaseService.favs.findMany({}))[0];
+    const favs = (await this.databaseService.favs.findMany({
+      include: {
+        artists: true,
+        albums: true,
+        tracks: true,
+      }
+    }))[0];
 
     if (!favs) {
-      const favsData = {
+      const favsId = {
         id: crypto.randomUUID(),
+      };
+
+      await this.databaseService.favs.create({ data: favsId });
+      return {
         artists: [],
         albums: [],
         tracks: [],
-      };
-
-      await this.databaseService.favs.create({ data: favsData });
-      favs = (await this.databaseService.favs.findMany({}))[0];
+      }
     }
-
-    const artists = await Promise.all(
-      favs.artists.map(async (id) => {
-        return await this.databaseService.artist.findUnique({
-          where: {
-            id,
-          },
-        });
-      }),
-    );
-
-    const albums = await Promise.all(
-      favs.albums.map(async (id) => {
-        return await this.databaseService.album.findUnique({
-          where: {
-            id,
-          },
-        });
-      }),
-    );
-
-    const tracks = await Promise.all(
-      favs.tracks.map(async (id) => {
-        return await this.databaseService.track.findUnique({
-          where: {
-            id,
-          },
-        });
-      }),
-    );
-
-    const result = {
-      artists: artists.filter((artist) => artist !== null) ?? [],
-      albums: albums.filter((album) => album !== null) ?? [],
-      tracks: tracks.filter((track) => track !== null) ?? [],
-    };
-
-    return result;
+    
+    return favs;
   }
 
   async add(route: string, id: string) {
@@ -73,31 +44,25 @@ export class FavoritesService {
       );
     }
 
-    let favs = (await this.databaseService.favs.findMany({}))[0];
+    const favs = (await this.databaseService.favs.findMany({
+      include: {
+        artists: true,
+        albums: true,
+        tracks: true,
+      }
+    }))[0];
 
-    if (!favs) {
-      const favsData = {
-        id: crypto.randomUUID(),
-        artists: [],
-        albums: [],
-        tracks: [],
-      };
+    const isFavorite = favs[`${route}s`].find((entity) => entity.id === id);
 
-      await this.databaseService.favs.create({ data: favsData });
-      favs = (await this.databaseService.favs.findMany({}))[0];
-    }
-
-    const favorite = favs[`${route}s`].find((favoriteId) => favoriteId === id);
-
-    if (!favorite) {
-      favs[`${route}s`].push(id);
-
+    if (!isFavorite) {
       await this.databaseService.favs.update({
         where: {
           id: favs.id,
         },
         data: {
-          [`${route}s`]: favs[`${route}s`],
+          [`${route}s`]: {
+            connect: { id }
+          }
         },
       });
     }
@@ -112,25 +77,29 @@ export class FavoritesService {
       },
     });
 
-    const favs = (await this.databaseService.favs.findMany({}))[0];
+    const favs = (await this.databaseService.favs.findMany({
+      include: {
+        artists: true,
+        albums: true,
+        tracks: true,
+      }
+    }))[0];
 
-    const favorite = favs[`${route}s`].find((favoriteId) => favoriteId === id);
+    const isFavorite = favs[`${route}s`].find((entity) => entity.id === id);
 
-    if (record && !favorite) {
+    if (record && !isFavorite) {
       throw new HttpException(`${route} is not favorite`, HttpStatus.NOT_FOUND);
     }
 
-    if (favorite) {
-      const idxRemoveTo = favs[`${route}s`].indexOf(id);
-
-      favs[`${route}s`].splice(idxRemoveTo, 1);
-
+    if (isFavorite) {
       return await this.databaseService.favs.update({
         where: {
           id: favs.id,
         },
         data: {
-          [`${route}s`]: favs[`${route}s`],
+          [`${route}s`]: {
+            disconnect: { id }
+          }
         },
       });
     }
