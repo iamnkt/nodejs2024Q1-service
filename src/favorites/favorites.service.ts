@@ -15,7 +15,7 @@ export class FavoritesService {
         albums: [],
         tracks: [],
       };
-  
+
       await this.databaseService.favs.create({ data: favsData });
       favs = (await this.databaseService.favs.findMany({}))[0];
     }
