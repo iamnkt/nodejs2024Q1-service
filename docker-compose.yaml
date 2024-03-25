@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   postgres:
-    image: postgres:${POSTGRES_DB_TAG}
+    image: db_image
     container_name: db_container
     restart: always
     build: 
