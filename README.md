@@ -26,6 +26,7 @@ npm install
 docker compose up
 ```
 
+If you are running PostgreSQL server locally on port 5432, try to change HOST_PORT value in .env file to another value, e.g., 5345
 ## Testing
 
 After application running open new terminal and enter:
