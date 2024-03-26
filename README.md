@@ -8,8 +8,11 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/iamnkt/nodejs2024Q1-service.git
 ```
+
+## Create .env file
+rename .env.example to .env in root folder 
 
 ## Installing NPM modules
 
@@ -20,13 +23,10 @@ npm install
 ## Running application
 
 ```
-npm start
+docker compose up
 ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
-
+If you are running PostgreSQL server locally on port 5432, try to change HOST_PORT value in .env file to another value, e.g., 5345
 ## Testing
 
 After application running open new terminal and enter:
@@ -43,19 +43,7 @@ To run only one of all test suites
 npm run test -- <path to suite>
 ```
 
-To run all test with authorization
-
-```
-npm run test:auth
-```
-
-To run only specific test suite with authorization
-
-```
-npm run test:auth -- <path to suite>
-```
-
-### Auto-fix and format
+## Auto-fix and format
 
 ```
 npm run lint
@@ -65,7 +53,25 @@ npm run lint
 npm run format
 ```
 
-### Debugging in VSCode
+## Vulnerabilities scanning
+
+To scan application image for the vulnerabilities
+
+```
+npm run scan:app
+```
+
+To scan database image for the vulnerabilities
+
+```
+npm run scan:db
+```
+
+## DockerHub repo with the application image
+
+[link](https://hub.docker.com/r/iamnkt/app_image)
+
+## Debugging in VSCode
 
 Press <kbd>F5</kbd> to debug.
 
