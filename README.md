@@ -58,13 +58,13 @@ npm run format
 To scan application image for the vulnerabilities
 
 ```
-npm run docker-scan:app
+npm run scan:app
 ```
 
 To scan database image for the vulnerabilities
 
 ```
-npm run docker-scan:db
+npm run scan:db
 ```
 
 ## DockerHub repo with the application image
